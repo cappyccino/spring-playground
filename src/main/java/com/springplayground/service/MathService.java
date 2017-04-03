@@ -40,4 +40,14 @@ public class MathService {
         return String.format(
                 "The volume of a %dx%dx%d rectangle is %d", length, width, height, volume);
     }
+
+    public String getArea(Integer radius) {
+        return String.format(
+                "Area of a circle with a radius of %d is %.5f", radius, Math.PI * Math.pow(radius, 2));
+    }
+
+    public String getArea(Integer length, Integer width) {
+        return String.format(
+                "Area of a %dx%d rectangle is %d", length, width, length * width);
+    }
 }

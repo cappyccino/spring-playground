@@ -2,7 +2,10 @@ package com.springplayground.controller;
 
 import com.springplayground.service.MathService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/math")
@@ -42,5 +45,20 @@ public class MathController {
             @PathVariable Integer width,
             @PathVariable Integer height) {
         return mathService.getVolume(length, width, height);
+    }
+
+    @PostMapping("/area")
+    public String postArea(@RequestParam Map<String, String> params) {
+        String type = params.get("type");
+        String radius = params.get("radius");
+        String width = params.get("width");
+        String height = params.get("height");
+
+        if ("circle".equals(type) && radius != null) {
+            return mathService.getArea(Integer.parseInt(radius));
+        } else if ("rectangle".equals(type) && height != null && width != null) {
+            return mathService.getArea(Integer.parseInt(height), Integer.parseInt(width));
+        }
+        return "Invalid";
     }
 }

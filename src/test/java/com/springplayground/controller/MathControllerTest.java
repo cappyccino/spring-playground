@@ -9,12 +9,18 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -75,7 +81,7 @@ public class MathControllerTest {
 
     @Test
     public void testPostSum_returns200() throws Exception {
-        RequestBuilder request = MockMvcRequestBuilders.post("/math/sum?n=4&n=5&n=6");
+        RequestBuilder request = post("/math/sum?n=4&n=5&n=6");
         this.mvc.perform(request).andExpect(status().isOk());
     }
 
@@ -90,7 +96,7 @@ public class MathControllerTest {
 
     @Test
     public void testVolume_returns200() throws Exception {
-        RequestBuilder postRequest = MockMvcRequestBuilders.post("/math/volume/3/4/5");
+        RequestBuilder postRequest = post("/math/volume/3/4/5");
         RequestBuilder patchRequest = MockMvcRequestBuilders.patch("/math/volume/6/7/8");
 
         this.mvc.perform(postRequest).andExpect(status().isOk());
@@ -103,5 +109,48 @@ public class MathControllerTest {
 
         verify(mathService, times(1)).getVolume(3, 4, 5);
         verifyNoMoreInteractions(mathService);
+    }
+
+    @Test
+    public void testPostArea_returns200ForCircle() throws Exception {
+        MockHttpServletRequestBuilder request = post("/math/area")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("type", "circle")
+                .param("radius", "4");
+
+        this.mvc.perform(request).andExpect(status().isOk());
+    }
+
+    @Test
+    public void testPostArea_returns200ForRectangle() throws Exception {
+        MockHttpServletRequestBuilder request = post("/math/area")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("type", "rectangle")
+                .param("width", "4")
+                .param("height", "7");
+
+        this.mvc.perform(request).andExpect(status().isOk());
+    }
+
+    @Test
+    public void testPostArea_callsMathService() throws Exception {
+        Map content = new HashMap<String, String>();
+        content.put("type", "circle");
+        content.put("radius", "4");
+        controller.postArea(content);
+
+        verify(mathService, times(1)).getArea(anyInt());
+        verifyNoMoreInteractions(mathService);
+    }
+
+    @Test
+    public void testPostArea_returnsInvalidForInvalidContent() throws Exception {
+        MockHttpServletRequestBuilder request = post("/math/area")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("invalid", "parameters");
+
+        this.mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(content().string("Invalid"));
     }
 }

@@ -69,4 +69,20 @@ public class MathServiceTest {
 
         assertEquals(actualResult, expectedResult);
     }
+
+    @Test
+    public void testGetArea_withTypeCircle() {
+        String expectedResult = "Area of a circle with a radius of 4 is 50.26548";
+        String actualResult = mathService.getArea(4);
+
+        assertEquals(actualResult, expectedResult);
+    }
+
+    @Test
+    public void testGetArea_withTypeRectangle() {
+        String expectedResult = "Area of a 4x7 rectangle is 28";
+        String actualResult = mathService.getArea(4, 7);
+
+        assertEquals(actualResult, expectedResult);
+    }
 }
