@@ -33,6 +33,14 @@ public class MathController {
     public String postSum(
             @RequestParam(value = "n") Integer[] numbersArray
     ) {
-        return mathService.sum(numbersArray);
+        return mathService.getSum(numbersArray);
+    }
+
+    @RequestMapping("/volume/{length}/{width}/{height}")
+    public String calculateVolume(
+            @PathVariable Integer length,
+            @PathVariable Integer width,
+            @PathVariable Integer height) {
+        return mathService.getVolume(length, width, height);
     }
 }

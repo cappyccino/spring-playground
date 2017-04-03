@@ -20,7 +20,7 @@ public class MathService {
         }
     }
 
-    public String sum(Integer[] numbers) {
+    public String getSum(Integer[] numbers) {
         StringBuilder resultBuilder = new StringBuilder();
         Integer sum = 0;
 
@@ -33,5 +33,11 @@ public class MathService {
         }
 
         return resultBuilder.toString() + " = " + sum;
+    }
+
+    public String getVolume(Integer length, Integer width, Integer height) {
+        Integer volume = length * width * height;
+        return String.format(
+                "The volume of a %dx%dx%d rectangle is %d", length, width, height, volume);
     }
 }

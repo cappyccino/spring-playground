@@ -16,11 +16,11 @@ public class MathServiceTest {
     }
 
     @Test
-    public void testSum() throws Exception {
+    public void testGetSum() throws Exception {
         Integer[] numbers = {4, 5, 6};
 
         String expectedResult = "4 + 5 + 6 = 15";
-        assertEquals(mathService.sum(numbers), expectedResult);
+        assertEquals(mathService.getSum(numbers), expectedResult);
     }
 
     @Test
@@ -52,13 +52,21 @@ public class MathServiceTest {
          String result = mathService.calculate(operator, x, y);
          assertEquals(result, "4 - 6 = -2");
     }
-    @Test
 
+    @Test
     public void testCalculateResult_withDivideOperator() throws Exception {
          String operator = "divide";
          Integer x = 30;
          Integer y = 5;
          String result = mathService.calculate(operator, x, y);
          assertEquals(result, "30 / 5 = 6");
+    }
+
+    @Test
+    public void testGetVolume() throws Exception {
+        String actualResult = mathService.getVolume(3, 4, 5);
+        String expectedResult = "The volume of a 3x4x5 rectangle is 60";
+
+        assertEquals(actualResult, expectedResult);
     }
 }

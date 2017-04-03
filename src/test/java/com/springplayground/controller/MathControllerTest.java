@@ -84,7 +84,24 @@ public class MathControllerTest {
         Integer[] params = {1, 2, 3};
         controller.postSum(params);
 
-        verify(mathService, times(1)).sum(params);
+        verify(mathService, times(1)).getSum(params);
+        verifyNoMoreInteractions(mathService);
+    }
+
+    @Test
+    public void testVolume_returns200() throws Exception {
+        RequestBuilder postRequest = MockMvcRequestBuilders.post("/math/volume/3/4/5");
+        RequestBuilder patchRequest = MockMvcRequestBuilders.patch("/math/volume/6/7/8");
+
+        this.mvc.perform(postRequest).andExpect(status().isOk());
+        this.mvc.perform(patchRequest).andExpect(status().isOk());
+    }
+
+    @Test
+    public void testCalculateVolume_callsMathService() throws Exception {
+        controller.calculateVolume(3, 4, 5);
+
+        verify(mathService, times(1)).getVolume(3, 4, 5);
         verifyNoMoreInteractions(mathService);
     }
 }
