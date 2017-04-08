@@ -1,9 +1,15 @@
 package com.springplayground.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.springplayground.model.Flight;
 import com.springplayground.model.Passenger;
 import com.springplayground.model.Ticket;
+import com.springplayground.model.TicketsWrapper;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Calendar;
@@ -38,6 +44,25 @@ public class FlightController {
         Flight flight2 = createFlight(departs, asList(ticket2));
 
         return asList(flight1, flight2);
+    }
+
+    @PostMapping("flights/tickets/sum")
+    public String postSum(@RequestBody TicketsWrapper ticketsWrapper) {
+        List<Ticket> tickets = ticketsWrapper.getTickets();
+        Integer sum = 0;
+
+        System.out.println(tickets);
+
+        for (Ticket ticket : tickets) {
+            sum += ticket.getPrice();
+        }
+
+        JsonObject jsonSum = new JsonObject();
+        jsonSum.addProperty("result", sum);
+        Gson builder = new GsonBuilder().create();
+        String jsonString = builder.toJson(jsonSum);
+
+        return jsonString;
     }
 
     private Flight createFlight(Date departs, List<Ticket> tickets) {

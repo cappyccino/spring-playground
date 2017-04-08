@@ -25,5 +25,6 @@ repositories {
 dependencies {
 	compile('org.projectlombok:lombok:1.16.16')
 	compile('org.springframework.boot:spring-boot-starter-web')
+	compile('org.immutables:gson:2.4.6')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }

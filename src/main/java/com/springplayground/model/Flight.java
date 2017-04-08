@@ -12,6 +12,6 @@ public class Flight {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @JsonProperty("Departs")
     Date departs;
-    @JsonProperty("Tickets")
+    @JsonProperty("TicketsWrapper")
     List<Ticket> tickets;
 }
