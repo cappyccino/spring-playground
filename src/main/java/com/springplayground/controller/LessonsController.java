@@ -19,6 +19,11 @@ public class LessonsController {
         return this.repository.findAll();
     }
 
+    @GetMapping("/{id}")
+    public Lesson getLesson(@PathVariable("id") Long id) {
+        return this.repository.findOne(id);
+    }
+
     @PostMapping("")
     public Lesson create(@RequestBody Lesson lesson) {
         return this.repository.save(lesson);
