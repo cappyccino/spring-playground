@@ -15,17 +15,17 @@ public class LessonsController {
     }
 
     @GetMapping("")
-    public Iterable<Lesson> all() {
+    public Iterable<Lesson> getLessons() {
         return this.repository.findAll();
     }
 
     @GetMapping("/{id}")
-    public Lesson getLesson(@PathVariable("id") Long id) {
+    public Lesson getLessonById(@PathVariable("id") Long id) {
         return this.repository.findOne(id);
     }
 
     @PostMapping("")
-    public Lesson create(@RequestBody Lesson lesson) {
+    public Lesson createLesson(@RequestBody Lesson lesson) {
         return this.repository.save(lesson);
     }
 
