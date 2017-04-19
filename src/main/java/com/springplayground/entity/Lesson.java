@@ -10,7 +10,6 @@ import javax.persistence.Id;
 @Entity
 @Data
 public class Lesson {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

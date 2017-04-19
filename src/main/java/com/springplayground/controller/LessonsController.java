@@ -29,4 +29,20 @@ public class LessonsController {
         return this.repository.save(lesson);
     }
 
+    @PatchMapping("/{id}")
+    public Lesson patchLesson(
+            @PathVariable("id") Long id,
+            @RequestBody Lesson lesson
+            ) {
+        Lesson lessonRecord = this.repository.findOne(id);
+        lessonRecord.setTitle(lesson.getTitle());
+        repository.save(lesson);
+
+        return lessonRecord;
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteLesson(@PathVariable("id") Long id) {
+        this.repository.delete(id);
+    }
 }

@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.transaction.Transactional;
 
+import static java.lang.Math.toIntExact;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -42,16 +43,15 @@ public class LessonsControllerTest {
     @Transactional
     @Rollback
     public void testGetLesson() throws Exception {
-        MockHttpServletRequestBuilder request = get("/lessons/5")
-                .contentType(MediaType.APPLICATION_JSON);
-
         Lesson lesson = new Lesson();
-        lesson.setId(5L);
         lesson.setTitle("JPA");
-        this.lessonRepo.save(lesson);
+        Lesson lesson1 = this.lessonRepo.save(lesson);
 
-        Lesson lessonRecord = lessonRepo.findOne(5L);
+        Lesson lessonRecord = lessonRepo.findOne(lesson1.getId());
         assertThat(lessonRecord.getTitle(), equalTo("JPA"));
+
+        MockHttpServletRequestBuilder request = get(String.format("/lessons/%s", lesson1.getId()))
+                .contentType(MediaType.APPLICATION_JSON);
 
         Gson builder = new GsonBuilder().create();
         String jsonString = builder.toJson(lesson);
@@ -66,26 +66,29 @@ public class LessonsControllerTest {
     @Rollback
     public void testPatchLessons() throws Exception {
         Lesson lesson = new Lesson();
-        lesson.setId(5L);
         lesson.setTitle("Foobar");
-        lessonRepo.save(lesson);
+        Lesson lesson1 = this.lessonRepo.save(lesson);
 
-        Lesson lessonRecord = lessonRepo.findOne(5L);
+        Long lessonId = lesson1.getId();
+        Lesson lessonRecord = lessonRepo.findOne(lessonId);
         assertThat(lessonRecord.getTitle(), equalTo("Foobar"));
 
-        String body = "{ \"id\": 5, \"title\": \"Spring Security\" }";
+        Gson builder = new GsonBuilder().create();
+        lesson.setTitle("Spring Security");
+        String jsonString = builder.toJson(lesson);
+
         RequestBuilder request = MockMvcRequestBuilders
-                .patch("/lessons/5")
+                .patch("/lessons/" + lessonId)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(body);
+                .content(jsonString);
 
         mvc.perform(request)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(5)))
+                .andExpect(jsonPath("$.id", is(toIntExact(lessonId))))
                 .andExpect(jsonPath("$.title", is("Spring Security")));
 
-        assertThat(lessonRepo.findOne(5L).getTitle(), equalTo("Spring Security"));
+        assertThat(lessonRepo.findOne(lessonId).getTitle(), equalTo("Spring Security"));
     }
 
 
@@ -94,23 +97,25 @@ public class LessonsControllerTest {
     @Rollback
     public void testDeleteLessons() throws Exception {
         Lesson lesson = new Lesson();
-        lesson.setId(5L);
         lesson.setTitle("Foobar");
-        lessonRepo.save(lesson);
+        Lesson lesson1 = this.lessonRepo.save(lesson);
 
-        Lesson lessonRecord = lessonRepo.findOne(5L);
+        Long lessonId = lesson1.getId();
+        Lesson lessonRecord = lessonRepo.findOne(lessonId);
         assertThat(lessonRecord.getTitle(), equalTo("Foobar"));
 
-        String body = "{ \"id\": 5, \"title\": \"JPA\" }";
+        Gson builder = new GsonBuilder().create();
+        String jsonString = builder.toJson(lesson);
+
         RequestBuilder request = MockMvcRequestBuilders
-                .delete("/lessons/5")
+                .delete("/lessons/" + lessonId)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(body);
+                .content(jsonString);
 
         mvc.perform(request)
                 .andExpect(status().isOk());
 
-        assertThat(lessonRepo.findOne(5L).getTitle(), nullValue());
+        assertThat(lessonRepo.findOne(lessonId), nullValue());
     }
 }
