@@ -2,10 +2,8 @@ package com.springplayground.controller;
 
 import com.springplayground.entity.Movie;
 import com.springplayground.repo.MovieRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.springplayground.service.MovieService;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/movies")
@@ -13,7 +11,10 @@ public class MoviesController {
 
     private final MovieRepository movieRepo;
 
-    public MoviesController(MovieRepository movieRepo) {
+    private MovieService movieService;
+
+    public MoviesController(MovieRepository movieRepo, MovieService movieService) {
+        this.movieService = movieService;
         this.movieRepo = movieRepo;
     }
 
@@ -25,5 +26,10 @@ public class MoviesController {
     @GetMapping("/count")
     public Integer getCount() {
         return this.movieRepo.getCount();
+    }
+
+    @GetMapping("")
+    public String getMovie(@RequestParam("q") String query) {
+        return movieService.getOmdbMovie(query);
     }
 }
