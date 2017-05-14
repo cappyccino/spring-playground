@@ -1,9 +1,11 @@
 package com.springplayground.service;
 
+import lombok.Data;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
+@Data
 public class MovieService {
 
     private final RestTemplate restTemplate = new RestTemplate();
